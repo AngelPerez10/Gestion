@@ -1,0 +1,19 @@
+<!-- DigitalFlow/templates/ordenes/editar_orden.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Orden</title>
+</head>
+<body>
+    <h1>Editar Orden</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Actualizar Orden</button>
+    </form>
+    <a href="{% url 'DigitalFlow:listado_ordenes' %}">Volver al listado</a>
+</body>
+</html>
