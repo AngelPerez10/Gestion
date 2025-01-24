@@ -9,8 +9,8 @@ class Orden(models.Model):
     fecha = models.DateField()
     hora_inicio = models.TimeField()
     hora_termino = models.TimeField()
-    nivel_satisfaccion = models.CharField(
-        max_length=10, choices=[('Malo', 'Malo'), ('Regular', 'Regular'), ('Bueno', 'Bueno'), ('Excelente', 'Excelente')]
+    nivel_satisfaccion = models.IntegerField(
+        choices=[(1, 'Malo'), (2, 'Regular'), (3, 'Bueno'), (4, 'Excelente')]
     )
     problema_solucionado = models.BooleanField()
     nombre_encargado = models.CharField(max_length=255)

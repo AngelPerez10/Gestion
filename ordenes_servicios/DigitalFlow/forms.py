@@ -6,7 +6,6 @@ from .models import Orden
 class OrdenForm(forms.ModelForm):
     class Meta:
         model = Orden
-        fields = '__all__'
         fields = ['identificador', 'empresa', 'responsable', 'problematica', 
                   'servicios_realizados', 'fecha', 'hora_inicio', 'hora_termino', 
                   'nivel_satisfaccion', 'problema_solucionado', 'nombre_encargado', 
