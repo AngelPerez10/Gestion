@@ -1,0 +1,48 @@
+<!--Archivo: Digital/templates/ordenes/eliminar_orden.html-->
+
+<div class="modal fade" id="eliminarOrdenModal" tabindex="-1" aria-labelledby="eliminarOrdenModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarOrdenModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar la orden {{ orden.identificador }}?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{% if orden.id %}{% url 'DigitalFlow:eliminar_orden' pk=orden.id %}{% endif %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                const form = this.closest('.delete-form');
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: '¡Esta acción no se puede deshacer!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
