@@ -104,6 +104,9 @@
                                         <a href="{% url 'DigitalFlow:editar_orden' pk=orden.id %}" class="btn btn-warning btn-sm shadow">
                                             <i class="bi bi-pencil-fill"></i> Editar
                                         </a>
+                                        <a href="{% url 'DigitalFlow:pdf_orden' pk=orden.id %}" class="btn btn-secondary btn-sm shadow">
+                                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                                        </a>
                                         <form action="{% url 'DigitalFlow:eliminar_orden' pk=orden.id %}" method="POST" class="delete-form" style="display:inline;">
                                             {% csrf_token %}
                                             <button type="button" class="btn btn-danger btn-sm shadow delete-button">

@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from .models import Orden
 from .forms import OrdenForm
 from django.contrib import messages
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 
 # Vista para mostrar el listado de órdenes
@@ -53,5 +56,38 @@ def eliminar_orden(request, pk):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': f'Error al eliminar la orden: {str(e)}'}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
+
+
+# Vista para generar el PDF de una orden
+def pdf_orden(request, pk):
+    orden = get_object_or_404(Orden, pk=pk)
+    
+    # Crear la respuesta HTTP con el tipo de contenido de un PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=orden_{orden.identificador}.pdf'
+    
+    # Crear el objeto canvas para generar el PDF
+    p = canvas.Canvas(response, pagesize=letter)
+    
+    # Agregar contenido al PDF
+    p.drawString(100, 750, f"Orden ID: {orden.identificador}")
+    p.drawString(100, 730, f"Empresa: {orden.empresa}")
+    p.drawString(100, 710, f"Responsable: {orden.responsable}")
+    p.drawString(100, 690, f"Problemática: {orden.problematica}")
+    p.drawString(100, 670, f"Servicios Realizados: {orden.servicios_realizados}")
+    p.drawString(100, 650, f"Fecha: {orden.fecha}")
+    p.drawString(100, 630, f"Hora Inicio: {orden.hora_inicio}")
+    p.drawString(100, 610, f"Hora Término: {orden.hora_termino}")
+    p.drawString(100, 590, f"Nivel de Satisfacción: {orden.nivel_satisfaccion}")
+    p.drawString(100, 570, f"Problema Solucionado: {'Sí' if orden.problema_solucionado else 'No'}")
+    p.drawString(100, 550, f"Encargado: {orden.nombre_encargado}")
+    p.drawString(100, 530, f"Cliente: {orden.nombre_cliente}")
+    p.drawString(100, 510, f"Teléfono Cliente: {orden.telefono_cliente}")
+    
+    # Finalizar el PDF
+    p.showPage()
+    p.save()
+    
+    return response
 
 
