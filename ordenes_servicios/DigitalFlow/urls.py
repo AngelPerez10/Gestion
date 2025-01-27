@@ -10,5 +10,5 @@ urlpatterns = [
     path('crear/', views.crear_orden, name='crear_orden'),
     path('editar/<int:pk>/', views.editar_orden, name='editar_orden'),
     path('eliminar/<int:pk>/', views.eliminar_orden, name='eliminar_orden'),
-    path('pdf/<int:pk>/', views.pdf_orden, name='pdf_orden'),  # Nueva URL para el PDF
+    path('from_user/', views.from_user, name='from_user'),
 ]
