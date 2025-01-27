@@ -1,3 +1,6 @@
+# Archivo: DigitalFlow/views.py
+# Archivo con las vistas de la aplicación DigitalFlow
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import Orden
@@ -62,35 +65,23 @@ def eliminar_orden(request, pk):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
 
 
-# Vista para el formulario de usuario
 def from_user(request):
     if request.method == 'POST':
+        # Suponiendo que usas un formulario para guardar la orden
         form = OrdenForm(request.POST, request.FILES)
         if form.is_valid():
-            orden = form.save(commit=False)
-
-            # Generar el PDF
-            buffer = io.BytesIO()
-            p = canvas.Canvas(buffer, pagesize=letter)
-            p.drawString(100, 750, f"Orden: {orden.identificador}")
-            p.drawString(100, 730, f"Empresa: {orden.empresa}")
-            p.drawString(100, 710, f"Responsable: {orden.responsable}")
-            p.drawString(100, 690, "Firma del Encargado:")
-            if orden.firma_encargado:
-                p.drawImage(orden.firma_encargado.path, 100, 650, width=150, height=50)
-            p.drawString(100, 630, "Firma del Cliente:")
-            if orden.firma_cliente:
-                p.drawImage(orden.firma_cliente.path, 100, 600, width=150, height=50)
-            p.save()
-
-            # Guardar el PDF en la base de datos
-            buffer.seek(0)
-            pdf_file = ContentFile(buffer.read())
-            buffer.close()
-            orden.pdf_generado.save(f"orden_{orden.id}.pdf", pdf_file)
-
-            orden.save()
-            return redirect('DigitalFlow:listado_ordenes')
+            nueva_orden = form.save()  # Guarda la orden y devuelve el objeto
+            # Redirige a vista_pdf con el ID de la nueva orden
+            return redirect('DigitalFlow:vista_pdf', pk=nueva_orden.pk)
     else:
         form = OrdenForm()
+
     return render(request, 'from_user.html', {'form': form})
+
+
+
+def vista_pdf(request, pk):
+    orden = get_object_or_404(Orden, pk=pk)
+    return render(request, 'vista_pdf.html', {'orden': orden})
+
+

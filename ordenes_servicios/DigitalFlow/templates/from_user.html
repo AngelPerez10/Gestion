@@ -6,148 +6,210 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/desing_user.css' %}">
     <title>Formulario de Usuario</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Crear Nueva Orden</h2>
+    <div class="container mt-5 mb-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Crear Nueva Orden</h2>
+            <p class="text-muted">Completa los detalles necesarios para registrar una nueva orden.</p>
+        </div>
+
         <!-- Formulario de creación de orden -->
         <form action="{% url 'DigitalFlow:from_user' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="identificador" class="form-label">Identificador</label>
-                    <select class="form-select" id="identificador" name="identificador" required>
-                        <option value="" disabled selected>Seleccionar</option>
-                        <option value="H">H</option>
-                        <option value="Q">Q</option>
-                        <option value="M">M</option>
-                    </select>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Detalles Generales</h5>
                 </div>
-                <div class="col-md-6">
-                    <label for="empresa" class="form-label">Empresa</label>
-                    <input type="text" class="form-control" id="empresa" name="empresa" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="responsable" class="form-label">Responsable</label>
-                    <input type="text" class="form-control" id="responsable" name="responsable" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="nivel_satisfaccion" class="form-label">Nivel de Satisfacción</label>
-                    <select class="form-select" id="nivel_satisfaccion" name="nivel_satisfaccion" required>
-                        <option value="" disabled selected>Seleccionar</option>
-                        <option value="1">1 - Malo</option>
-                        <option value="2">2 - Regular</option>
-                        <option value="3">3 - Bueno</option>
-                        <option value="4">4 - Excelente</option>
-                    </select>
-                </div>
-                <div class="col-md-12">
-                    <label for="problematica" class="form-label">Problemática</label>
-                    <textarea class="form-control" id="problematica" name="problematica" rows="3" required></textarea>
-                </div>
-                <div class="col-md-12">
-                    <label for="servicios_realizados" class="form-label">Servicios Realizados</label>
-                    <textarea class="form-control" id="servicios_realizados" name="servicios_realizados" rows="3" required></textarea>
-                </div>
-                <div class="col-md-6">
-                    <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="hora_inicio" class="form-label">Hora Inicio</label>
-                    <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="hora_termino" class="form-label">Hora Término</label>
-                    <input type="time" class="form-control" id="hora_termino" name="hora_termino" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="problema_solucionado" class="form-label">Problema Solucionado</label>
-                    <select class="form-select" id="problema_solucionado" name="problema_solucionado" required>
-                        <option value="" disabled selected>Seleccionar</option>
-                        <option value="True">Sí</option>
-                        <option value="False">No</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="nombre_encargado" class="form-label">Encargado</label>
-                    <input type="text" class="form-control" id="nombre_encargado" name="nombre_encargado" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="nombre_cliente" class="form-label">Cliente</label>
-                    <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="telefono_cliente" class="form-label">Teléfono Cliente</label>
-                    <input type="tel" class="form-control" id="telefono_cliente" name="telefono_cliente" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="firma_encargado" class="form-label">Firma del Encargado:</label>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModalEncargado">Firmar Encargado</button>
-                </div>
-                <div class="col-md-6">
-                    <label for="firma_cliente" class="form-label">Firma del Cliente:</label>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModalCliente">Firmar Cliente</button>
-                </div>
-                <div class="col-md-6">
-                    <label for="foto_inicio" class="form-label">Foto de Inicio</label>
-                    <input type="file" class="form-control" id="foto_inicio" name="foto_inicio" accept="image/*">
-                </div>
-                <div class="col-md-6">
-                    <label for="foto_fin" class="form-label">Foto de Fin</label>
-                    <input type="file" class="form-control" id="foto_fin" name="foto_fin" accept="image/*">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="identificador" class="form-label">Identificador</label>
+                            <select class="form-select" id="identificador" name="identificador" required>
+                                <option value="" disabled selected>Seleccionar</option>
+                                <option value="H">H</option>
+                                <option value="Q">Q</option>
+                                <option value="M">M</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="empresa" class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="empresa" name="empresa" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="responsable" class="form-label">Responsable</label>
+                            <input type="text" class="form-control" id="responsable" name="responsable" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nivel_satisfaccion" class="form-label">Nivel de Satisfacción</label>
+                            <select class="form-select" id="nivel_satisfaccion" name="nivel_satisfaccion" required>
+                                <option value="" disabled selected>Seleccionar</option>
+                                <option value="1">1 - Malo</option>
+                                <option value="2">2 - Regular</option>
+                                <option value="3">3 - Bueno</option>
+                                <option value="4">4 - Excelente</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Guardar Orden</button>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">Detalles del Cliente y Encargado</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="nombre_encargado" class="form-label">Nombre del Encargado</label>
+                            <input type="text" class="form-control" id="nombre_encargado" name="nombre_encargado" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombre_cliente" class="form-label">Nombre del Cliente</label>
+                            <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono_cliente" class="form-label">Teléfono del Cliente</label>
+                            <input type="tel" class="form-control" id="telefono_cliente" name="telefono_cliente" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="problema_solucionado" class="form-label">Problema Solucionado</label>
+                            <select class="form-select" id="problema_solucionado" name="problema_solucionado" required>
+                                <option value="" disabled selected>Seleccionar</option>
+                                <option value="True">Sí</option>
+                                <option value="False">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Descripción de la Orden</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="problematica" class="form-label">Problemática</label>
+                            <textarea class="form-control" id="problematica" name="problematica" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="servicios_realizados" class="form-label">Servicios Realizados</label>
+                            <textarea class="form-control" id="servicios_realizados" name="servicios_realizados" rows="3" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Detalles de Tiempo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="hora_inicio" class="form-label">Hora Inicio</label>
+                            <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fecha_finalizacion" class="form-label">Fecha de Finalización</label>
+                            <input type="date" class="form-control" id="fecha_finalizacion" name="fecha_finalizacion" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="hora_termino" class="form-label">Hora Término</label>
+                            <input type="time" class="form-control" id="hora_termino" name="hora_termino" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Firmas y Archivos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Botones para abrir los modales de firma -->
+
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#firmaModalEncargado">
+                                Firmar como Encargado
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#firmaModalCliente">
+                                Firmar como Cliente
+                            </button>
+                        </div>
+
+                        <!-- Modales para firmas -->
+                        <div class="modal fade" id="firmaModalEncargado" tabindex="-1" aria-labelledby="firmaModalEncargadoLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="firmaModalEncargadoLabel">Firma del Encargado</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <canvas id="firma_encargado_canvas" width="500" height="200"></canvas>
+                                        <button type="button" class="btn btn-secondary mt-3 w-100" id="clearEncargadoSignature">Limpiar Firma</button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="saveEncargadoSignature" data-bs-dismiss="modal">Guardar Firma</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="firmaModalCliente" tabindex="-1" aria-labelledby="firmaModalClienteLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="firmaModalClienteLabel">Firma del Cliente</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <canvas id="firma_cliente_canvas" width="500" height="200"></canvas>
+                                        <button type="button" class="btn btn-secondary mt-3 w-100" id="clearClienteSignature">Limpiar Firma</button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="saveClienteSignature" data-bs-dismiss="modal">Guardar Firma</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subida de archivos -->
+                        <div class="col-md-6">
+                            <label for="foto_inicio" class="form-label">Foto de Inicio</label>
+                            <input type="file" class="form-control" id="foto_inicio" name="foto_inicio" accept="image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="foto_fin" class="form-label">Foto de Fin</label>
+                            <input type="file" class="form-control" id="foto_fin" name="foto_fin" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Guardar Orden</button>
             </div>
         </form>
     </div>
 
-    <!-- Modal de Firma Encargado -->
-    <div class="modal fade" id="firmaModalEncargado" tabindex="-1" aria-labelledby="firmaModalEncargadoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="firmaModalEncargadoLabel">Firma del Encargado</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <canvas id="firma_encargado_canvas" width="500" height="200"></canvas>
-                    <button type="button" class="btn btn-secondary btn-clear" id="clearEncargadoSignature">Limpiar Firma</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="saveEncargadoSignature" data-bs-dismiss="modal">Guardar Firma</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Firma Cliente -->
-    <div class="modal fade" id="firmaModalCliente" tabindex="-1" aria-labelledby="firmaModalClienteLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="firmaModalClienteLabel">Firma del Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <canvas id="firma_cliente_canvas" width="500" height="200"></canvas>
-                    <button type="button" class="btn btn-secondary btn-clear" id="clearClienteSignature">Limpiar Firma</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="saveClienteSignature" data-bs-dismiss="modal">Guardar Firma</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/digital_signature.js' %}"></script>
 </body>
 </html>

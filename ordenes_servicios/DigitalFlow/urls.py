@@ -11,4 +11,5 @@ urlpatterns = [
     path('editar/<int:pk>/', views.editar_orden, name='editar_orden'),
     path('eliminar/<int:pk>/', views.eliminar_orden, name='eliminar_orden'),
     path('from_user/', views.from_user, name='from_user'),
+    path('vista_pdf/<int:pk>/', views.vista_pdf, name='vista_pdf'),
 ]

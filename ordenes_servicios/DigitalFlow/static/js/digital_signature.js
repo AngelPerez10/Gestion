@@ -1,3 +1,6 @@
+//Archivo: js/digital_signature.js
+//Archivo para la funcionalidad de las firmas digitales en las órdenes de servicio
+
 window.onload = function () {
     const encargadoCanvas = document.getElementById('firma_encargado_canvas');
     const clienteCanvas = document.getElementById('firma_cliente_canvas');
@@ -71,6 +74,8 @@ window.onload = function () {
         }
     }
 
+    
+
     // Eventos para el lienzo del encargado
     encargadoCanvas.addEventListener('mousedown', (e) => {
         drawingEncargado = startDrawing(encargadoCtx, encargadoCanvas, e);
@@ -138,32 +143,4 @@ window.onload = function () {
         localStorage.removeItem('firma_cliente'); // Borrar firma almacenada
     });
 
-    // Convertir firmas a imágenes antes de enviar
-    document.querySelector('form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevenir el envío del formulario para evitar recarga de página
-
-        // Obtener las imágenes en formato base64
-        const encargadoSignature = encargadoCanvas.toDataURL();
-        const clienteSignature = clienteCanvas.toDataURL();
-
-        // Guardar las firmas en localStorage
-        localStorage.setItem('firma_encargado', encargadoSignature);
-        localStorage.setItem('firma_cliente', clienteSignature);
-
-        // Crear campos ocultos en el formulario para enviar las imágenes
-        const encargadoInput = document.createElement('input');
-        encargadoInput.type = 'hidden';
-        encargadoInput.name = 'firma_encargado';
-        encargadoInput.value = encargadoSignature;
-        this.appendChild(encargadoInput);
-
-        const clienteInput = document.createElement('input');
-        clienteInput.type = 'hidden';
-        clienteInput.name = 'firma_cliente';
-        clienteInput.value = clienteSignature;
-        this.appendChild(clienteInput);
-
-        // Enviar el formulario
-        this.submit();
-    });
 };

@@ -1,0 +1,55 @@
+<!-- Archivo: DigitalFlow/templates/vista_pdf.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista PDF - Orden</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .order-details {
+            font-size: 1.1em;
+        }
+        .order-details li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="container my-5">
+    <h1 class="text-center text-primary">Vista de Orden: {{ orden.identificador }}</h1>
+    <div class="my-4">
+        <ul class="order-details">
+            <li><strong>Identificador:</strong> {{ orden.identificador }}</li>
+            <li><strong>Empresa:</strong> {{ orden.empresa }}</li>
+            <li><strong>Responsable:</strong> {{ orden.responsable }}</li>
+            <li><strong>Problemática:</strong> {{ orden.problematica }}</li>
+            <li><strong>Servicios Realizados:</strong> {{ orden.servicios_realizados }}</li>
+            <li><strong>Fecha de Inicio:</strong> {{ orden.fecha_inicio }}</li>
+            <li><strong>Hora de Inicio:</strong> {{ orden.hora_inicio }}</li>
+            <li><strong>Fecha de Finalización:</strong> {{ orden.fecha_finalizacion|default:"N/A" }}</li>
+            <li><strong>Hora de Término:</strong> {{ orden.hora_termino }}</li>
+            <li><strong>Nivel de Satisfacción:</strong> {{ orden.get_nivel_satisfaccion_display }}</li>
+            <li><strong>Problema Solucionado:</strong> {{ orden.problema_solucionado|yesno:"Sí,No" }}</li>
+            <li><strong>Nombre Encargado:</strong> {{ orden.nombre_encargado }}</li>
+            <li><strong>Nombre Cliente:</strong> {{ orden.nombre_cliente }}</li>
+            <li><strong>Teléfono Cliente:</strong> {{ orden.telefono_cliente }}</li>
+        </ul>
+
+        {% if orden.foto_inicio %}
+        <h5>Foto de Inicio:</h5>
+        <img src="{{ orden.foto_inicio.url }}" alt="Foto de Inicio" class="img-fluid rounded shadow-sm">
+        {% else %}
+        <p>No disponible</p>
+        {% endif %}
+
+        {% if orden.foto_fin %}
+        <h5>Foto de Fin:</h5>
+        <img src="{{ orden.foto_fin.url }}" alt="Foto de Fin" class="img-fluid rounded shadow-sm">
+        {% else %}
+        <p>No disponible</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'DigitalFlow:listado_ordenes' %}" class="btn btn-primary">Volver al listado de órdenes</a>
+</body>
+</html>
