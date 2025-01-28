@@ -1,55 +1,136 @@
-<!-- Archivo: DigitalFlow/templates/vista_pdf.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vista PDF - Orden</title>
+    <title>Orden de Servicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .order-details {
-            font-size: 1.1em;
-        }
-        .order-details li {
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/desing_pdf.css' %}">
 </head>
-<body class="container my-5">
-    <h1 class="text-center text-primary">Vista de Orden: {{ orden.identificador }}</h1>
-    <div class="my-4">
-        <ul class="order-details">
-            <li><strong>Identificador:</strong> {{ orden.identificador }}</li>
-            <li><strong>Empresa:</strong> {{ orden.empresa }}</li>
-            <li><strong>Responsable:</strong> {{ orden.responsable }}</li>
-            <li><strong>Problemática:</strong> {{ orden.problematica }}</li>
-            <li><strong>Servicios Realizados:</strong> {{ orden.servicios_realizados }}</li>
-            <li><strong>Fecha de Inicio:</strong> {{ orden.fecha_inicio }}</li>
-            <li><strong>Hora de Inicio:</strong> {{ orden.hora_inicio }}</li>
-            <li><strong>Fecha de Finalización:</strong> {{ orden.fecha_finalizacion|default:"N/A" }}</li>
-            <li><strong>Hora de Término:</strong> {{ orden.hora_termino }}</li>
-            <li><strong>Nivel de Satisfacción:</strong> {{ orden.get_nivel_satisfaccion_display }}</li>
-            <li><strong>Problema Solucionado:</strong> {{ orden.problema_solucionado|yesno:"Sí,No" }}</li>
-            <li><strong>Nombre Encargado:</strong> {{ orden.nombre_encargado }}</li>
-            <li><strong>Nombre Cliente:</strong> {{ orden.nombre_cliente }}</li>
-            <li><strong>Teléfono Cliente:</strong> {{ orden.telefono_cliente }}</li>
-        </ul>
-
-        {% if orden.foto_inicio %}
-        <h5>Foto de Inicio:</h5>
-        <img src="{{ orden.foto_inicio.url }}" alt="Foto de Inicio" class="img-fluid rounded shadow-sm">
-        {% else %}
-        <p>No disponible</p>
-        {% endif %}
-
-        {% if orden.foto_fin %}
-        <h5>Foto de Fin:</h5>
-        <img src="{{ orden.foto_fin.url }}" alt="Foto de Fin" class="img-fluid rounded shadow-sm">
-        {% else %}
-        <p>No disponible</p>
-        {% endif %}
+<body>
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Orden de Servicio</h1>
+        <div class="canvas-container">
+            <canvas id="ordenCanvas" width="1651" height="1654"></canvas>
+        </div>
+        <button id="downloadPdf" class="btn btn-primary mt-4">Descargar PDF</button>
     </div>
 
-    <a href="{% url 'DigitalFlow:listado_ordenes' %}" class="btn btn-primary">Volver al listado de órdenes</a>
+    <script>
+        const orden = {
+            id: "{{ orden.id }}",
+            fecha_inicio: "{{ orden.fecha_inicio }}",
+            fecha_finalizacion: "{{ orden.fecha_finalizacion }}",
+            nombre_cliente: "{{ orden.nombre_cliente }}",
+            empresa: "{{ orden.empresa }}",
+            responsable: "{{ orden.responsable }}",
+            problematica: "{{ orden.problematica }}",
+            servicios_realizados: "{{ orden.servicios_realizados }}",
+            hora_inicio: "{{ orden.hora_inicio }}",
+            hora_termino: "{{ orden.hora_termino }}",
+            foto_inicio: "{% if orden.foto_inicio %}{{ orden.foto_inicio.url }}{% endif %}",
+            foto_fin: "{% if orden.foto_fin %}{{ orden.foto_fin.url }}{% endif %}",
+            nivel_satisfaccion: "{{ orden.nivel_satisfaccion }}",
+            problema_solucionado: "{{ orden.problema_solucionado|yesno:'true,false' }}"
+        };
+
+        const canvas = document.getElementById("ordenCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const img = new Image();
+        img.src = "{% static 'images/orden_servicio.jpg' %}";
+        img.onload = () => {
+            const x = (canvas.width - img.width) / 2;
+            const y = (canvas.height - img.height) / 2;
+            ctx.drawImage(img, x, y, img.width, img.height);
+
+            ctx.font = "35px Arial";
+            ctx.fillStyle = "blue";
+
+            ctx.fillText(`${orden.id}`, 1406, 430);
+            ctx.fillText(`${orden.empresa}`, 159, 397);
+            ctx.fillText(`${orden.fecha_inicio}`, 980, 385);
+            ctx.fillText(`${orden.fecha_finalizacion}`, 980, 477);
+            ctx.fillText(`${orden.hora_inicio}`, 1091, 537);
+            ctx.fillText(`${orden.hora_termino}`, 1091, 590);
+            ctx.fillText(`${orden.responsable} `, 159, 570);
+            ctx.fillText(`${orden.problematica}`, 159, 708);
+            ctx.fillText(`${orden.servicios_realizados}`, 159, 885);
+
+            if (orden.problema_solucionado) {
+                ctx.fillText("✓", 668, 1250);
+            } else {
+                ctx.fillText("✓", 752, 1250);
+            }
+
+            const nivelSatisfaccion = parseInt(orden.nivel_satisfaccion, 10); 
+
+            const niveles = ["", "", "", ""];
+            niveles.forEach((nivel, index) => {
+                const checked = nivelSatisfaccion === index + 1 ? "✓" : "";
+                ctx.fillText(`${nivel} ${checked}`, 175 + index * 112, 1250);
+            });
+        };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("downloadPdf").addEventListener("click", () => {
+                const pdfCanvas = document.createElement("canvas");
+                pdfCanvas.width = canvas.width;
+                pdfCanvas.height = canvas.height;
+                const pdfCtx = pdfCanvas.getContext("2d");
+                pdfCtx.drawImage(canvas, 0, 0);
+
+                const imgData = pdfCanvas.toDataURL("image/jpg");
+
+                const A4_WIDTH_MM = 210;
+                const A4_HEIGHT_MM = 297;
+
+                const scale = Math.min(
+                    A4_WIDTH_MM / (canvas.width / 72 * 25.4),
+                    A4_HEIGHT_MM / (canvas.height / 72 * 25.4)
+                );
+
+                const pdfWidth = (canvas.width / 72) * 25.4 * scale;
+                const pdfHeight = (canvas.height / 72) * 25.4 * scale;
+
+                const pdf = new window.jspdf.jsPDF("portrait", "mm", [A4_WIDTH_MM, A4_HEIGHT_MM]);
+                pdf.addImage(imgData, "jpg", 0, 0, pdfWidth, pdfHeight);
+
+                const fotoInicio = new Image();
+                fotoInicio.src = orden.foto_inicio;
+                fotoInicio.onload = () => {
+                    const imgInicioDataURL = getImageDataURL(fotoInicio);
+                    pdf.addImage(imgInicioDataURL, "png", 30, pdfHeight + 2, 60, 70);
+
+                    pdf.setFontSize(12);
+                    pdf.text("Foto de Inicio:", 30, pdfHeight + 1);
+
+                    const fotoFin = new Image();
+                    fotoFin.src = orden.foto_fin;
+                    fotoFin.onload = () => {
+                        const imgFinDataURL = getImageDataURL(fotoFin);
+                        pdf.addImage(imgFinDataURL, "png", 120, pdfHeight + 2, 60, 70);
+
+                        pdf.text("Foto de Finalización:", 120, pdfHeight + 1);
+
+                        pdf.save(`Orden de Servicio del Folio ${orden.id}.pdf`);
+                    };
+                };
+            });
+        });
+
+        function getImageDataURL(image) {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+            return canvas.toDataURL();
+        }
+    </script>
 </body>
 </html>
