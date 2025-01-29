@@ -139,54 +139,18 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <!-- Botones para abrir los modales de firma -->
-
+                        <!-- Lienzo de firma del Encargado -->
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#firmaModalEncargado">
-                                Firmar como Encargado
-                            </button>
+                            <label class="form-label">Firma del Encargado</label>
+                            <canvas id="firma_encargado_canvas" width="500" height="200" style="border: 1px solid #000;"></canvas>
+                            <button type="button" class="btn btn-secondary mt-3 w-100" id="clearEncargadoSignature">Limpiar Firma</button>
                         </div>
+
+                        <!-- Lienzo de firma del Cliente -->
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#firmaModalCliente">
-                                Firmar como Cliente
-                            </button>
-                        </div>
-
-                        <!-- Modales para firmas -->
-                        <div class="modal fade" id="firmaModalEncargado" tabindex="-1" aria-labelledby="firmaModalEncargadoLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="firmaModalEncargadoLabel">Firma del Encargado</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <canvas id="firma_encargado_canvas" width="500" height="200"></canvas>
-                                        <button type="button" class="btn btn-secondary mt-3 w-100" id="clearEncargadoSignature">Limpiar Firma</button>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="saveEncargadoSignature" data-bs-dismiss="modal">Guardar Firma</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="firmaModalCliente" tabindex="-1" aria-labelledby="firmaModalClienteLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="firmaModalClienteLabel">Firma del Cliente</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <canvas id="firma_cliente_canvas" width="500" height="200"></canvas>
-                                        <button type="button" class="btn btn-secondary mt-3 w-100" id="clearClienteSignature">Limpiar Firma</button>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="saveClienteSignature" data-bs-dismiss="modal">Guardar Firma</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <label class="form-label">Firma del Cliente</label>
+                            <canvas id="firma_cliente_canvas" width="500" height="200" style="border: 1px solid #000;"></canvas>
+                            <button type="button" class="btn btn-secondary mt-3 w-100" id="clearClienteSignature">Limpiar Firma</button>
                         </div>
 
                         <!-- Subida de archivos -->

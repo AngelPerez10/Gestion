@@ -1,6 +1,3 @@
-//Archivo: js/digital_signature.js
-//Archivo para la funcionalidad de las firmas digitales en las órdenes de servicio
-
 window.onload = function () {
     const encargadoCanvas = document.getElementById('firma_encargado_canvas');
     const clienteCanvas = document.getElementById('firma_cliente_canvas');
@@ -13,14 +10,14 @@ window.onload = function () {
         canvas.height = canvas.offsetHeight;
     }
 
-    // Función para inicializar los lienzos cuando el modal es mostrado
+    // Inicializar los lienzos
     function initializeCanvas(canvas, ctx) {
         resizeCanvas(canvas);
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
     }
 
-    // Función para cargar las firmas desde localStorage
+    // Cargar las firmas desde localStorage
     function loadSignature(canvas, ctx, storageKey) {
         const signatureData = localStorage.getItem(storageKey);
         if (signatureData) {
@@ -32,17 +29,11 @@ window.onload = function () {
         }
     }
 
-    // Esperar a que el modal de firma del encargado se abra
-    $('#firmaModalEncargado').on('shown.bs.modal', function () {
-        initializeCanvas(encargadoCanvas, encargadoCtx);
-        loadSignature(encargadoCanvas, encargadoCtx, 'firma_encargado');
-    });
-
-    // Esperar a que el modal de firma del cliente se abra
-    $('#firmaModalCliente').on('shown.bs.modal', function () {
-        initializeCanvas(clienteCanvas, clienteCtx);
-        loadSignature(clienteCanvas, clienteCtx, 'firma_cliente');
-    });
+    // Inicializar los lienzos al cargar la página
+    initializeCanvas(encargadoCanvas, encargadoCtx);
+    initializeCanvas(clienteCanvas, clienteCtx);
+    loadSignature(encargadoCanvas, encargadoCtx, 'firma_encargado');
+    loadSignature(clienteCanvas, clienteCtx, 'firma_cliente');
 
     let drawingEncargado = false;
     let drawingCliente = false;
@@ -74,8 +65,6 @@ window.onload = function () {
         }
     }
 
-    
-
     // Eventos para el lienzo del encargado
     encargadoCanvas.addEventListener('mousedown', (e) => {
         drawingEncargado = startDrawing(encargadoCtx, encargadoCanvas, e);
@@ -89,7 +78,7 @@ window.onload = function () {
         drawingEncargado = false;
     });
 
-    // Nuevos eventos para pantallas táctiles en el lienzo del encargado
+    // Eventos para pantallas táctiles en el lienzo del encargado
     encargadoCanvas.addEventListener('touchstart', (e) => {
         drawingEncargado = startDrawing(encargadoCtx, encargadoCanvas, e);
         e.preventDefault(); // Prevenir el scroll
@@ -117,7 +106,7 @@ window.onload = function () {
         drawingCliente = false;
     });
 
-    // Nuevos eventos para pantallas táctiles en el lienzo del cliente
+    // Eventos para pantallas táctiles en el lienzo del cliente
     clienteCanvas.addEventListener('touchstart', (e) => {
         drawingCliente = startDrawing(clienteCtx, clienteCanvas, e);
         e.preventDefault(); // Prevenir el scroll
@@ -143,4 +132,9 @@ window.onload = function () {
         localStorage.removeItem('firma_cliente'); // Borrar firma almacenada
     });
 
+    // Guardar firmas al enviar el formulario
+    document.querySelector('form').addEventListener('submit', function () {
+        localStorage.setItem('firma_encargado', encargadoCanvas.toDataURL());
+        localStorage.setItem('firma_cliente', clienteCanvas.toDataURL());
+    });
 };

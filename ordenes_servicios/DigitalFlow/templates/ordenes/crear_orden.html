@@ -30,6 +30,10 @@
                             <input type="text" class="form-control" id="responsable" name="responsable" required>
                         </div>
                         <div class="col-md-6">
+                            <label for="telefono_cliente" class="form-label">Teléfono del Responsable</label>
+                            <input type="tel" class="form-control" id="telefono_cliente" name="telefono_cliente" maxlength="10" pattern="\d{10}" inputmode="numeric"  required>
+                        </div>
+                        <div class="col-md-6">
                             <label for="nivel_satisfaccion" class="form-label">Nivel de Satisfacción</label>
                             <select class="form-select" id="nivel_satisfaccion" name="nivel_satisfaccion" required>
                                 <option value="" disabled selected>Seleccionar</option>
@@ -72,16 +76,8 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="nombre_encargado" class="form-label">Encargado</label>
+                            <label for="nombre_encargado" class="form-label">Nombre del Ingeniero Encargado</label>
                             <input type="text" class="form-control" id="nombre_encargado" name="nombre_encargado" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="nombre_cliente" class="form-label">Cliente</label>
-                            <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="telefono_cliente" class="form-label">Teléfono Cliente</label>
-                            <input type="tel" class="form-control" id="telefono_cliente" name="telefono_cliente" required>
                         </div>
                         <div class="col-md-6">
                             <label for="foto_inicio" class="form-label">Foto de Inicio</label>

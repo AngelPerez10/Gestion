@@ -2,6 +2,9 @@
 # Archivo con las vistas de la aplicación DigitalFlow
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from .models import Orden
 from .forms import OrdenForm
@@ -13,6 +16,30 @@ import io
 from django.core.files.base import ContentFile
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('DigitalFlow:listado_ordenes')  # Redirigir si ya está autenticado
+    
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('DigitalFlow:listado_ordenes')
+            else:
+                messages.error(request, 'Usuario o contraseña incorrectos.')
+        else:
+            messages.error(request, 'Error al iniciar sesión.')
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'registration/login.html', {'form': form})
+
 
 
 # Vista para mostrar el listado de órdenes

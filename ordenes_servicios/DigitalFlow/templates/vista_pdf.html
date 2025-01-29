@@ -1,3 +1,5 @@
+<!-- Archivo: DigitalFlow/templates/vista_pdf.html -->
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -22,7 +24,6 @@
             id: "{{ orden.id }}",
             fecha_inicio: "{{ orden.fecha_inicio }}",
             fecha_finalizacion: "{{ orden.fecha_finalizacion }}",
-            nombre_cliente: "{{ orden.nombre_cliente }}",
             empresa: "{{ orden.empresa }}",
             responsable: "{{ orden.responsable }}",
             problematica: "{{ orden.problematica }}",
@@ -45,9 +46,9 @@
             const y = (canvas.height - img.height) / 2;
             ctx.drawImage(img, x, y, img.width, img.height);
 
-            ctx.font = "35px Arial";
+            // Dibujar el contenido del PDF
+            ctx.font = "25px Arial";
             ctx.fillStyle = "blue";
-
             ctx.fillText(`${orden.id}`, 1406, 430);
             ctx.fillText(`${orden.empresa}`, 159, 397);
             ctx.fillText(`${orden.fecha_inicio}`, 980, 385);
@@ -64,13 +65,32 @@
                 ctx.fillText("✓", 752, 1250);
             }
 
-            const nivelSatisfaccion = parseInt(orden.nivel_satisfaccion, 10); 
-
+            const nivelSatisfaccion = parseInt(orden.nivel_satisfaccion, 10);
             const niveles = ["", "", "", ""];
             niveles.forEach((nivel, index) => {
                 const checked = nivelSatisfaccion === index + 1 ? "✓" : "";
                 ctx.fillText(`${nivel} ${checked}`, 175 + index * 112, 1250);
             });
+
+            // Dibujar las firmas si existen
+            const firmaEncargado = localStorage.getItem('firma_encargado');
+            const firmaCliente = localStorage.getItem('firma_cliente');
+
+            if (firmaEncargado) {
+                const encargadoImg = new Image();
+                encargadoImg.src = firmaEncargado;
+                encargadoImg.onload = () => {
+                    ctx.drawImage(encargadoImg, 740, 1100, 500, 200); // Ajusta las coordenadas según sea necesario
+                };
+            }
+
+            if (firmaCliente) {
+                const clienteImg = new Image();
+                clienteImg.src = firmaCliente;
+                clienteImg.onload = () => {
+                    ctx.drawImage(clienteImg, 1150, 1050, 500, 200); // Ajusta las coordenadas según sea necesario
+                };
+            }
         };
     </script>
 
@@ -83,23 +103,28 @@
                 pdfCanvas.height = canvas.height;
                 const pdfCtx = pdfCanvas.getContext("2d");
                 pdfCtx.drawImage(canvas, 0, 0);
-
+    
                 const imgData = pdfCanvas.toDataURL("image/jpg");
-
+    
                 const A4_WIDTH_MM = 210;
                 const A4_HEIGHT_MM = 297;
-
+    
                 const scale = Math.min(
                     A4_WIDTH_MM / (canvas.width / 72 * 25.4),
                     A4_HEIGHT_MM / (canvas.height / 72 * 25.4)
                 );
-
+    
                 const pdfWidth = (canvas.width / 72) * 25.4 * scale;
                 const pdfHeight = (canvas.height / 72) * 25.4 * scale;
-
+    
                 const pdf = new window.jspdf.jsPDF("portrait", "mm", [A4_WIDTH_MM, A4_HEIGHT_MM]);
                 pdf.addImage(imgData, "jpg", 0, 0, pdfWidth, pdfHeight);
 
+                // Agregar las firmas al PDF
+                const firmaEncargado = localStorage.getItem('firma_encargado');
+                const firmaCliente = localStorage.getItem('firma_cliente');
+    
+                // Agregar las fotos de inicio y fin si existen
                 const fotoInicio = new Image();
                 fotoInicio.src = orden.foto_inicio;
                 fotoInicio.onload = () => {

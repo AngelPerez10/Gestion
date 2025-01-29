@@ -13,7 +13,6 @@ class Orden(models.Model):
     fecha_finalizacion = models.DateField(null=True, blank=True)
     hora_termino = models.TimeField()
     nombre_encargado = models.CharField(max_length=100)
-    nombre_cliente = models.CharField(max_length=100)
     telefono_cliente = models.CharField(max_length=15)
     problema_solucionado = models.BooleanField()
     foto_inicio = models.ImageField(upload_to='fotos_iniciales/', null=True, blank=True)

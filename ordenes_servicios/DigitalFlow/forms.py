@@ -8,7 +8,7 @@ class OrdenForm(forms.ModelForm):
         model = Orden
         fields = [
             'identificador', 'empresa', 'responsable', 'nivel_satisfaccion', 
-            'nombre_encargado', 'nombre_cliente', 'telefono_cliente', 
+            'nombre_encargado', 'telefono_cliente', 
             'problema_solucionado', 'problematica', 'servicios_realizados', 
             'fecha_inicio', 'hora_inicio', 'fecha_finalizacion', 'hora_termino', 
             'foto_inicio', 'foto_fin'

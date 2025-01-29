@@ -58,6 +58,7 @@
                                 <th>Identificador</th>
                                 <th>Empresa</th>
                                 <th>Responsable</th>
+                                <th>Teléfono del Responsable</th>
                                 <th>Problemática</th>
                                 <th>Servicios Realizados</th>
                                 <th>Fecha de Inicio</th>
@@ -67,8 +68,6 @@
                                 <th>Nivel de Satisfacción</th>
                                 <th>Problema Solucionado</th>
                                 <th>Encargado</th>
-                                <th>Cliente</th>
-                                <th>Teléfono Cliente</th>
                                 <th>Foto de Inicio</th>
                                 <th>Foto de Fin</th>
                                 <th>Acciones</th>
@@ -80,6 +79,7 @@
                                 <td>{{ orden.identificador }}</td>
                                 <td>{{ orden.empresa }}</td>
                                 <td>{{ orden.responsable }}</td>
+                                <td>{{ orden.telefono_cliente }}</td>
                                 <td>{{ orden.problematica }}</td>
                                 <td>{{ orden.servicios_realizados }}</td>
                                 <td>{{ orden.fecha_inicio }}</td>
@@ -89,8 +89,6 @@
                                 <td>{{ orden.nivel_satisfaccion }}</td>
                                 <td>{{ orden.problema_solucionado|yesno:"Sí,No" }}</td>
                                 <td>{{ orden.nombre_encargado }}</td>
-                                <td>{{ orden.nombre_cliente }}</td>
-                                <td>{{ orden.telefono_cliente }}</td>
                                 <td>
                                     {% if orden.foto_inicio %}
                                     <img src="{{ orden.foto_inicio.url }}" alt="Foto de Inicio" class="img-thumbnail rounded shadow-sm" style="max-width: 80px;">
