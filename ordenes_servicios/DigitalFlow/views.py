@@ -156,7 +156,7 @@ def enviar_pdf(request):
                 f"Orden de Servicio {orden_id}",
                 "Adjunto encontrará la orden de servicio generada.",
                 'angeelp7457@gmail.com',  # Aquí puedes poner una dirección genérica o institucional
-                ['idolomessi1030@gmail.com', 'aperez74@ucol.mx'],  # Lista de destinatarios
+                ['idolomessi1030@gmail.com'],  # Lista de destinatarios
             )
 
 
