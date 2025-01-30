@@ -97,3 +97,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("telefono_cliente").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, ''); // Reemplaza todo lo que no sea número
+    });
+</script>

@@ -118,11 +118,26 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "DigitalFlow/static",
 ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'DigitalFlow:listado_ordenes'
+LOGOUT_REDIRECT_URL = '/login/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'angeelp7457@gmail.com'
+EMAIL_HOST_PASSWORD = 'bdcg sbun tcin kqyt'
+EMAIL_USE_TLS = True
+DEBUG = True
+
 
 
 # Default primary key field type

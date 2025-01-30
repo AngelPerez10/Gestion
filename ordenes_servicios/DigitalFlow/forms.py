@@ -2,6 +2,17 @@
 
 from django import forms
 from .models import Orden
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
+class RegistroUsuarioForm(UserCreationForm):
+    is_staff = forms.BooleanField(required=False, label="¿Es administrador?", initial=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'is_staff']
+
 
 class OrdenForm(forms.ModelForm):
     class Meta:

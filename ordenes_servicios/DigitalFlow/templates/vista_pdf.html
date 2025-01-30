@@ -1,5 +1,3 @@
-<!-- Archivo: DigitalFlow/templates/vista_pdf.html -->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -17,6 +15,7 @@
             <canvas id="ordenCanvas" width="1651" height="1654"></canvas>
         </div>
         <button id="downloadPdf" class="btn btn-primary mt-4">Descargar PDF</button>
+        <button id="sendPdf" class="btn btn-primary mt-4">Enviar Formulario</button>
     </div>
 
     <script>
@@ -55,7 +54,7 @@
             ctx.fillText(`${orden.fecha_finalizacion}`, 980, 477);
             ctx.fillText(`${orden.hora_inicio}`, 1091, 537);
             ctx.fillText(`${orden.hora_termino}`, 1091, 590);
-            ctx.fillText(`${orden.responsable} `, 159, 570);
+            ctx.fillText(`${orden.responsable}`, 159, 570);
             ctx.fillText(`${orden.problematica}`, 159, 708);
             ctx.fillText(`${orden.servicios_realizados}`, 159, 885);
 
@@ -80,7 +79,7 @@
                 const encargadoImg = new Image();
                 encargadoImg.src = firmaEncargado;
                 encargadoImg.onload = () => {
-                    ctx.drawImage(encargadoImg, 740, 1100, 500, 200); // Ajusta las coordenadas según sea necesario
+                    ctx.drawImage(encargadoImg, 740, 1100, 500, 200);
                 };
             }
 
@@ -88,14 +87,23 @@
                 const clienteImg = new Image();
                 clienteImg.src = firmaCliente;
                 clienteImg.onload = () => {
-                    ctx.drawImage(clienteImg, 1150, 1050, 500, 200); // Ajusta las coordenadas según sea necesario
+                    ctx.drawImage(clienteImg, 1150, 1050, 500, 200);
                 };
             }
         };
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
+        // Función para convertir la imagen a DataURL
+        function getImageDataURL(image) {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+            return canvas.toDataURL();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("downloadPdf").addEventListener("click", () => {
                 const pdfCanvas = document.createElement("canvas");
@@ -103,28 +111,24 @@
                 pdfCanvas.height = canvas.height;
                 const pdfCtx = pdfCanvas.getContext("2d");
                 pdfCtx.drawImage(canvas, 0, 0);
-    
+
                 const imgData = pdfCanvas.toDataURL("image/jpg");
-    
+
                 const A4_WIDTH_MM = 210;
                 const A4_HEIGHT_MM = 297;
-    
+
                 const scale = Math.min(
                     A4_WIDTH_MM / (canvas.width / 72 * 25.4),
                     A4_HEIGHT_MM / (canvas.height / 72 * 25.4)
                 );
-    
+
                 const pdfWidth = (canvas.width / 72) * 25.4 * scale;
                 const pdfHeight = (canvas.height / 72) * 25.4 * scale;
-    
+
                 const pdf = new window.jspdf.jsPDF("portrait", "mm", [A4_WIDTH_MM, A4_HEIGHT_MM]);
                 pdf.addImage(imgData, "jpg", 0, 0, pdfWidth, pdfHeight);
 
-                // Agregar las firmas al PDF
-                const firmaEncargado = localStorage.getItem('firma_encargado');
-                const firmaCliente = localStorage.getItem('firma_cliente');
-    
-                // Agregar las fotos de inicio y fin si existen
+                // Espera a que las fotos se carguen correctamente
                 const fotoInicio = new Image();
                 fotoInicio.src = orden.foto_inicio;
                 fotoInicio.onload = () => {
@@ -140,22 +144,156 @@
                         const imgFinDataURL = getImageDataURL(fotoFin);
                         pdf.addImage(imgFinDataURL, "png", 120, pdfHeight + 2, 60, 70);
 
-                        pdf.text("Foto de Finalización:", 120, pdfHeight + 1);
+                        pdf.text("Foto de Termino:", 120, pdfHeight + 1);
 
                         pdf.save(`Orden de Servicio del Folio ${orden.id}.pdf`);
                     };
                 };
             });
-        });
 
-        function getImageDataURL(image) {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.width = image.width;
-            canvas.height = image.height;
-            ctx.drawImage(image, 0, 0);
-            return canvas.toDataURL();
-        }
+            document.getElementById("sendPdf").addEventListener("click", async () => {
+                // Crear un canvas temporal para generar el PDF
+                const pdfCanvas = document.createElement("canvas");
+                pdfCanvas.width = canvas.width;
+                pdfCanvas.height = canvas.height;
+                const pdfCtx = pdfCanvas.getContext("2d");
+
+                // Dibujar la imagen de fondo y el contenido en el canvas temporal
+                const img = new Image();
+                img.src = "{% static 'images/orden_servicio.jpg' %}";
+                img.onload = () => {
+                    const x = (pdfCanvas.width - img.width) / 2;
+                    const y = (pdfCanvas.height - img.height) / 2;
+                    pdfCtx.drawImage(img, x, y, img.width, img.height);
+
+                    // Dibujar el contenido del PDF
+                    pdfCtx.font = "25px Arial";
+                    pdfCtx.fillStyle = "blue";
+                    pdfCtx.fillText(`${orden.id}`, 1406, 430);
+                    pdfCtx.fillText(`${orden.empresa}`, 159, 397);
+                    pdfCtx.fillText(`${orden.fecha_inicio}`, 980, 385);
+                    pdfCtx.fillText(`${orden.fecha_finalizacion}`, 980, 477);
+                    pdfCtx.fillText(`${orden.hora_inicio}`, 1091, 537);
+                    pdfCtx.fillText(`${orden.hora_termino}`, 1091, 590);
+                    pdfCtx.fillText(`${orden.responsable}`, 159, 570);
+                    pdfCtx.fillText(`${orden.problematica}`, 159, 708);
+                    pdfCtx.fillText(`${orden.servicios_realizados}`, 159, 885);
+
+                    if (orden.problema_solucionado) {
+                        pdfCtx.fillText("✓", 668, 1250);
+                    } else {
+                        pdfCtx.fillText("✓", 752, 1250);
+                    }
+
+                    const nivelSatisfaccion = parseInt(orden.nivel_satisfaccion, 10);
+                    const niveles = ["", "", "", ""];
+                    niveles.forEach((nivel, index) => {
+                        const checked = nivelSatisfaccion === index + 1 ? "✓" : "";
+                        pdfCtx.fillText(`${nivel} ${checked}`, 175 + index * 112, 1250);
+                    });
+
+                    // Dibujar las firmas si existen
+                    const firmaEncargado = localStorage.getItem('firma_encargado');
+                    const firmaCliente = localStorage.getItem('firma_cliente');
+
+                    const loadFirmas = async () => {
+                        if (firmaEncargado) {
+                            const encargadoImg = new Image();
+                            encargadoImg.src = firmaEncargado;
+                            await new Promise((resolve) => {
+                                encargadoImg.onload = () => {
+                                    pdfCtx.drawImage(encargadoImg, 740, 1100, 500, 200);
+                                    resolve();
+                                };
+                            });
+                        }
+
+                        if (firmaCliente) {
+                            const clienteImg = new Image();
+                            clienteImg.src = firmaCliente;
+                            await new Promise((resolve) => {
+                                clienteImg.onload = () => {
+                                    pdfCtx.drawImage(clienteImg, 1150, 1050, 500, 200);
+                                    resolve();
+                                };
+                            });
+                        }
+                    };
+
+                    loadFirmas().then(() => {
+                        // Convertir el canvas a una imagen
+                        const imgData = pdfCanvas.toDataURL("image/jpg");
+
+                        // Crear el PDF
+                        const A4_WIDTH_MM = 210;
+                        const A4_HEIGHT_MM = 297;
+
+                        const scale = Math.min(
+                            A4_WIDTH_MM / (pdfCanvas.width / 72 * 25.4),
+                            A4_HEIGHT_MM / (pdfCanvas.height / 72 * 25.4)
+                        );
+
+                        const pdfWidth = (pdfCanvas.width / 72) * 25.4 * scale;
+                        const pdfHeight = (pdfCanvas.height / 72) * 25.4 * scale;
+
+                        const pdf = new window.jspdf.jsPDF("portrait", "mm", [A4_WIDTH_MM, A4_HEIGHT_MM]);
+                        pdf.addImage(imgData, "jpg", 0, 0, pdfWidth, pdfHeight);
+
+                        // Espera a que las fotos se carguen correctamente
+                        const fotoInicio = new Image();
+                        fotoInicio.src = orden.foto_inicio;
+                        fotoInicio.onload = () => {
+                            const imgInicioDataURL = getImageDataURL(fotoInicio);
+                            pdf.addImage(imgInicioDataURL, "png", 30, pdfHeight + 2, 60, 70);
+
+                            pdf.setFontSize(12);
+                            pdf.text("Foto de Inicio:", 30, pdfHeight + 1);
+
+                            const fotoFin = new Image();
+                            fotoFin.src = orden.foto_fin;
+                            fotoFin.onload = () => {
+                                const imgFinDataURL = getImageDataURL(fotoFin);
+                                pdf.addImage(imgFinDataURL, "png", 120, pdfHeight + 2, 60, 70);
+
+                                pdf.text("Foto de Termino:", 120, pdfHeight + 1);
+
+                                // Convertir el PDF a un Blob
+                                const pdfBlob = pdf.output("blob");
+
+                                // Crear FormData y agregar datos
+                                const formData = new FormData();
+                                formData.append("pdf", pdfBlob, `orden_servicio_${orden.id}.pdf`);
+                                formData.append("orden_id", orden.id);
+
+                                // Enviar el PDF al servidor
+                                fetch("{% url 'DigitalFlow:enviar_pdf' %}", {
+                                    method: "POST",
+                                    body: formData,
+                                    headers: {
+                                        "X-CSRFToken": "{{ csrf_token }}",
+                                    },
+                                })
+                                    .then((response) => {
+                                        if (response.ok) {
+                                            alert("El PDF ha sido enviado correctamente.");
+                                        } else {
+                                            response.json().then((errorData) => {
+                                                alert(`Error al enviar el PDF: ${errorData.message}`);
+                                            });
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error:", error);
+                                        alert("Hubo un error al enviar el PDF.");
+                                    });
+                            };
+                        };
+                    });
+                };
+            });
+        });
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>

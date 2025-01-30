@@ -175,5 +175,27 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/digital_signature.js' %}"></script>
+    <script src="{% static 'js/digital_signature.js' %}"></script>
+    <script>
+        // Capturar las firmas y enviarlas en el formulario
+        document.getElementById('ordenForm').addEventListener('submit', function (e) {
+            // Convertir las firmas a base64
+            const firmaEncargadoCanvas = document.getElementById('firma_encargado_canvas');
+            const firmaClienteCanvas = document.getElementById('firma_cliente_canvas');
+
+            const firmaEncargado = firmaEncargadoCanvas.toDataURL();
+            const firmaCliente = firmaClienteCanvas.toDataURL();
+
+            // Asignar las firmas a los campos ocultos
+            document.getElementById('firma_encargado').value = firmaEncargado;
+            document.getElementById('firma_cliente').value = firmaCliente;
+
+            // Redirigir a la vista del PDF con las firmas como parámetros en la URL
+            const url = `{% url 'DigitalFlow:vista_pdf' pk=0 %}?firma_encargado=${encodeURIComponent(firmaEncargado)}&firma_cliente=${encodeURIComponent(firmaCliente)}`;
+            window.location.href = url;
+
+            e.preventDefault(); // Evitar el envío tradicional del formulario
+        });
+    </script>
 </body>
 </html>

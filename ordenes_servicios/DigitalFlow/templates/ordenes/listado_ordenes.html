@@ -106,7 +106,7 @@
                                         </a>
                                         <a href="{% url 'DigitalFlow:vista_pdf' pk=orden.id %}" class="btn btn-secondary btn-sm shadow">
                                             <i class="bi bi-file-earmark-pdf"></i> PDF
-                                        </a>
+                                        </a>                                        
                                         <form action="{% url 'DigitalFlow:eliminar_orden' pk=orden.id %}" method="POST" class="delete-form" style="display:inline;">
                                             {% csrf_token %}
                                             <button type="button" class="btn btn-danger btn-sm shadow delete-button">
@@ -128,11 +128,6 @@
     <!-- Modal para Crear Orden -->
     {% block crear_orden %}
     {% include 'ordenes/crear_orden.html' %}
-    {% endblock %}
-
-    <!-- Modal para Crear Editar -->
-    {% block editar_orden %}
-    {% include 'ordenes/editar_orden.html' %}
     {% endblock %}
 
     <!-- Modal para Crear Eliminar -->
